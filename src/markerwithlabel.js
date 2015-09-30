@@ -317,12 +317,11 @@ MarkerLabel_.prototype.onAdd = function () {
  * @private
  */
 MarkerLabel_.prototype.onRemove = function () {
-  var i;
   this.labelDiv_.parentNode.removeChild(this.labelDiv_);
   this.eventDiv_.parentNode.removeChild(this.eventDiv_);
 
   // Remove event listeners:
-  for (i = 0; i < this.listeners_.length; i++) {
+  for (var i = 0; i < this.listeners_.length; i++) {
     google.maps.event.removeListener(this.listeners_[i]);
   }
 };
@@ -331,10 +330,11 @@ MarkerLabel_.prototype.onRemove = function () {
  * Draws the label on the map.
  * @private
  */
-MarkerLabel_.prototype.draw = function () {
+MarkerLabel_.prototype.draw = function () {    
   this.setContent();
   this.setTitle();
   this.setStyles();
+  this.setPosition();
 };
 
 /**
@@ -343,7 +343,14 @@ MarkerLabel_.prototype.draw = function () {
  * @private
  */
 MarkerLabel_.prototype.setContent = function () {
+
   var content = this.marker_.get("labelContent");
+  var oldContent = this.labelDiv_.innerHTML;
+
+  if (content == oldContent){
+    return;
+  }
+
   if (typeof content.nodeType === "undefined") {
     this.labelDiv_.innerHTML = content;
     this.eventDiv_.innerHTML = this.labelDiv_.innerHTML;
@@ -433,6 +440,13 @@ MarkerLabel_.prototype.setAnchor = function () {
  * @private
  */
 MarkerLabel_.prototype.setPosition = function (yOffset) {
+
+  var projection = this.getProjection();
+
+  if (typeof projection === "undefined") {
+    return;
+  }
+
   var position = this.getProjection().fromLatLngToDivPixel(this.marker_.getPosition());
   if (typeof yOffset === "undefined") {
     yOffset = 0;
@@ -579,4 +593,54 @@ MarkerWithLabel.prototype.setMap = function (theMap) {
 
   // ... then deal with the label:
   this.label.setMap(theMap);
+};
+
+/**
+ * Overrides the standard Marker setOptions function.
+ * @param {options} the options to be set.
+ * @private
+ */
+MarkerWithLabel.prototype.setOptions = function (options) {
+
+  //This is an optimized version of the setOptions
+  // 1. Prevents flicker by not recreating everything, just updating the modified values
+
+  // Call the inherited function...
+ //google.maps.Marker.prototype.setOptions.apply(this, arguments);
+
+  //Position
+  var oldPosition = this.getPosition();
+  if (oldPosition && options.position && !options.position.equals(options.position)) {
+    this.setPosition(options.position);      
+  }
+
+  var oldIcon = this.getIcon();     
+  if (oldIcon && options.icon) {
+
+    var iconChanged = 
+         (oldIcon.origin && options.icon.origin && !oldIcon.origin.equals(options.icon.origin)) ||
+         (oldIcon.size && options.icon.size && !oldIcon.size.equals(options.icon.size)) ||
+         (oldIcon.url && options.icon.url && oldIcon.url != options.icon.url) ||
+         (oldIcon.optimized && options.icon.optimized && oldIcon.optimized != options.icon.optimized) ||
+         (oldIcon.scaledSize && options.icon.scaledSize && !oldIcon.scaledSize.equals(options.icon.scaledSize)) ||
+         (oldIcon.anchor && options.icon.anchor && !oldIcon.anchor.equals(options.icon.anchor));        
+
+    if (iconChanged) {
+        this.setIcon(options.icon);
+    }
+  }
+  
+  var zIndexChanged = false;
+  var oldZIndex = this.getZIndex();
+  if (oldZIndex && options.zIndex && options.zIndex != oldZIndex) {
+    this.setZIndex(options.zIndex);    
+  }
+
+  this.labelContent = options.labelContent;
+  this.labelInBackground = options.labelInBackground;
+  this.labelAnchor = options.labelAnchor;
+  this.labelClass = options.labelClass;        
+  this.labelVisible = options.labelVisible; 
+ 
+  this.label.draw();
 };
