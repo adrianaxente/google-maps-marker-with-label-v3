@@ -1,12 +1,12 @@
 {
   "name": "ax-gmul3-markerwithlabel",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "homepage": "https://github.com/adrianaxente/google-maps-marker-with-label-v3",
   "authors": [
     "Axente Adrian <adrianaxente@yahoo.com>"
   ],
   "description": "Google Maps Marker With Label Based On http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.9/",
-  "main": "../src/markerwithlabel.js",
+  "main": "src/markerwithlabel.js",
   "keywords": [
     "Google",
     "marker",
@@ -27,7 +27,8 @@
     "tests",
     "docs",
     "examples",
-    "bower"
+    "bower",
+    "src/markerwithlabel_packed.js"
   ],
   "repository": {
     "type": "git",
