@@ -1,6 +1,6 @@
 /**
  * @name MarkerWithLabel for V3
- * @version 1.1.14 [September 30, 2015]
+ * @version 1.1.15 [October 1, 2015]
  * @author Axente Adrian (Initial author Gary Little (inspired by code from Marc Ridey of Google)).
  * @copyright Copyright 2015 Axente Adrian [adrianaxente at yahoo.com]
  * @fileoverview MarkerWithLabel extends the Google Maps JavaScript API V3
@@ -443,7 +443,7 @@ MarkerLabel_.prototype.setPosition = function (yOffset) {
 
   var projection = this.getProjection();
 
-  if (typeof projection === "undefined") {
+  if (typeof projection === "undefined" || projection == null) {
     return;
   }
 
@@ -608,10 +608,25 @@ MarkerWithLabel.prototype.setOptions = function (options) {
   // Call the inherited function...
  //google.maps.Marker.prototype.setOptions.apply(this, arguments);
 
-  //Position
-  var oldPosition = this.getPosition();
-  if (oldPosition && options.position && !options.position.equals(options.position)) {
-    this.setPosition(options.position);      
+
+  if (options.animation) {
+    this.setAnimation(options.animation);
+  }
+
+  if (options.attribution) {
+    this.setAttribution(options.attribution);
+  }
+
+  if (options.clickable) {
+    this.setClickable(options.clickable);
+  }
+
+  if (options.cursor) {
+    this.setCursor(options.cursor);
+  }
+
+  if (options.draggable) {
+    this.setDraggable(options.draggable);
   }
 
   var oldIcon = this.getIcon();     
@@ -628,6 +643,36 @@ MarkerWithLabel.prototype.setOptions = function (options) {
     if (iconChanged) {
         this.setIcon(options.icon);
     }
+  }
+
+  if (options.label) {
+    this.setLabel(options.label);
+  }
+
+  if (options.opacity) {
+    this.setOpacity(options.opacity);
+  }
+
+  if (options.place) {
+    this.setPlace(options.place);
+  }
+
+  //Position
+  var oldPosition = this.getPosition();
+  if (oldPosition && options.position && !options.position.equals(options.position)) {
+    this.setPosition(options.position);      
+  } 
+
+  if (options.shape) {
+    this.setShape(options.shape);
+  }
+
+  if (options.title) {
+    this.setTitle(options.title);
+  }  
+
+  if (options.visible) {
+    this.setVisible(options.visible);
   }
   
   var zIndexChanged = false;
