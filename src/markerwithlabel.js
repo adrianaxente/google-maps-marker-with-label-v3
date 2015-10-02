@@ -1,6 +1,6 @@
 /**
  * @name MarkerWithLabel for V3
- * @version 1.1.15 [October 1, 2015]
+ * @version 1.1.16 [October 2, 2015]
  * @author Axente Adrian (Initial author Gary Little (inspired by code from Marc Ridey of Google)).
  * @copyright Copyright 2015 Axente Adrian [adrianaxente at yahoo.com]
  * @fileoverview MarkerWithLabel extends the Google Maps JavaScript API V3
@@ -681,11 +681,12 @@ MarkerWithLabel.prototype.setOptions = function (options) {
     this.setZIndex(options.zIndex);    
   }
 
-  this.labelContent = options.labelContent;
+  this.labelClass = options.labelClass;
   this.labelInBackground = options.labelInBackground;
-  this.labelAnchor = options.labelAnchor;
-  this.labelClass = options.labelClass;        
-  this.labelVisible = options.labelVisible; 
+  this.labelStyle = options.labelStyle;
+  this.labelContent = options.labelContent;  
+  this.labelAnchor = options.labelAnchor;        
+  this.labelVisible = options.labelVisible;
  
   this.label.draw();
 };
